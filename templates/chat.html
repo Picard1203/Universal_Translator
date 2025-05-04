@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Universal Translator – Chat</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    /* Prevent flash of unstyled content if possible */
+    body { visibility: hidden; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span>Universal Translator</span>
+  <span class="me" id="me"></span> </header>
+
+<div id="history" class="log" aria-live="polite">
+    </div>
+
+<form id="compose">
+  <input id="text" autocomplete="off" placeholder="Type a message…" aria-label="Message Input">
+  <button type="submit" aria-label="Send Message"></button>
+</form>
+
+<script src="/static/app_chat.js"></script>
+<script>
+    // Make body visible once CSS likely loaded
+    document.body.style.visibility = 'visible';
+</script>
+</body>
+</html>

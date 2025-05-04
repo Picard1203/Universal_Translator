@@ -1,0 +1,48 @@
+<!-- templates/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <!--
+    Login Page for Universal Translator
+    -----------------------------------
+    - Choose nickname & interface language
+  -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Universal Translator – Login</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="login-bg">
+  <!-- Centered login card -->
+  <main class="login-card" role="main" aria-labelledby="login-title">
+    <h2 id="login-title">Universal Translator</h2>
+    <p class="tagline">real-time bilingual chat</p>
+
+    <div class="field">
+      <label for="nick">Nickname</label>
+      <input
+        id="nick"
+        name="nick"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Enter your nickname"
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="lang">Interface language</label>
+      <select id="lang" name="lang" required>
+        <option value="en">English</option>
+        <option value="he">עברית</option>
+      </select>
+    </div>
+
+    <button id="enterBtn" type="button">Enter chat</button>
+  </main>
+
+  <!-- Application script for login flow -->
+  <script src="/static/app_login.js" defer></script>
+</body>
+</html>

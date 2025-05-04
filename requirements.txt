@@ -1,0 +1,8 @@
+Flask[async]
+websockets
+cryptography
+hypercorn
+asyncio
+black
+flake8
+isort

@@ -1,0 +1,427 @@
+/* ========================================================================
+   Universal-Translator Chat Stylesheet
+   ========================================================================
+   - Provides a responsive, accessible UI for login and chat.
+   - Supports light/dark themes via CSS variables.
+   - Includes login page, chat header, message history, bubbles, and composer.
+   ======================================================================== */
+
+/* ---------- Design Tokens & Reset ---------- */
+:root {
+  /* Light Theme (Default) */
+  --bg-color:            #e8ecf0;
+  --text-color:          #212529;
+  --card-bg:             #ffffff;
+  --border-color:        #ced4da;
+  --input-bg:            #ffffff;
+  --input-text:          #212529;
+  --header-bg:           #0d6efd;
+  --header-text:         #ffffff;
+  --button-bg:           #0d6efd;
+  --button-text:         #ffffff;
+  --button-hover-bg:     #0b5ed7;
+  --bubble-peer-bg:      #f8f9fa;
+  --bubble-peer-text:    #212529;
+  --bubble-self-bg:      #d1e7dd;
+  --bubble-self-text:    #094f2d;
+  --meta-text-color:     #6c757d;
+  --system-text-color:   #6c757d;
+  --link-color:          #0d6efd;
+  --focus-ring-color:    #86b7fe;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Theme Overrides */
+    --bg-color:          #212529;
+    --text-color:        #dee2e6;
+    --card-bg:           #343a40;
+    --border-color:      #495057;
+    --input-bg:          #495057;
+    --input-text:        #dee2e6;
+    --header-bg:         #084298;
+    --header-text:       #ffffff;
+    --button-bg:         #0d6efd;
+    --button-text:       #ffffff;
+    --button-hover-bg:   #0b5ed7;
+    --bubble-peer-bg:    #343a40;
+    --bubble-peer-text:  #f8f9fa;
+    --bubble-self-bg:    #0a3622;
+    --bubble-self-text:  #a3cfbb;
+    --meta-text-color:   #adb5bd;
+    --system-text-color: #adb5bd;
+    --link-color:        #6ea8fe;
+    --focus-ring-color:  #0d6efd;
+  }
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ---------- layout ---------- */
+html, body {
+  height: 100%;
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family:
+    system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", "Noto Sans", "Liberation Sans",
+    Arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 16px;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- login page (No changes) ---------- */
+.login-bg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+.login-card {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 380px;
+  width: 90%;
+}
+.login-card h2 {
+  margin: 0 0 0.5rem;
+  text-align: center;
+  color: var(--text-color);
+}
+.tagline {
+  margin: 0 0 1.5rem;
+  text-align: center;
+  color: var(--meta-text-color);
+  font-size: 0.9rem;
+}
+.field {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--meta-text-color);
+}
+.field input,
+.field select {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.15s ease-in-out,
+              box-shadow  0.15s ease-in-out;
+}
+.field input:focus,
+.field select:focus {
+  border-color: var(--focus-ring-color);
+  outline: none;
+  box-shadow: 0 0 0 0.25rem rgba(13,110,253,0.25);
+}
+#enterBtn {
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+#enterBtn:hover {
+  background-color: var(--button-hover-bg);
+}
+
+/* ---------- chat header (No changes) ---------- */
+header {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--header-bg);
+  color: var(--header-text);
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+header .me {
+  margin-left: auto;
+  font-weight: 400;
+  opacity: 0.9;
+  font-size: 0.9rem;
+}
+[dir="rtl"] header .me {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* ---------- history / Log Area ---------- */
+.log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ---------- message rows ---------- */
+.row {
+  display: flex;
+  width: 100%;
+}
+.row.self {
+  justify-content: flex-end;
+}
+.row.peer {
+  justify-content: flex-start;
+}
+
+/* System messages */
+.row.system {
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+.system-message-content {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  background-color: rgba(108,117,125,0.1);
+  color: var(--system-text-color);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* ---------- bubbles ---------- */
+.bubble {
+  max-width: 75%;
+  padding: 0.5rem 1rem;
+  padding-bottom: 1.7rem; /* Increased padding for timestamp */
+  border-radius: 18px;
+  line-height: 1.45;
+  word-wrap: break-word;
+  position: relative;
+  font-size: 0.98rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  margin-bottom: 0;
+}
+.peer .bubble {
+  background: var(--bubble-peer-bg);
+  color: var(--bubble-peer-text);
+  border-bottom-left-radius: 5px;
+  margin-right: auto;
+}
+.self .bubble {
+  background: var(--bubble-self-bg);
+  color: var(--bubble-self-text);
+  border-bottom-right-radius: 5px;
+  margin-left: auto;
+}
+
+/* Bubble Tails */
+.bubble::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 12px;
+  height: 20px;
+}
+.self .bubble::before {
+  right: -6px;
+  background-color: var(--bubble-self-bg);
+  clip-path: path("M0 20 L12 20 L12 0 Z");
+}
+.peer .bubble::before {
+  left: -6px;
+  background-color: var(--bubble-peer-bg);
+  clip-path: path("M0 0 L12 20 L0 20 Z");
+}
+
+/* RTL adjustments for bubble corners and tails */
+[dir="rtl"] .self .bubble {
+  border-bottom-right-radius: 18px;
+  border-bottom-left-radius: 5px;
+}
+[dir="rtl"] .self .bubble::before {
+  left: -6px;
+  right: auto;
+  clip-path: path("M0 0 L12 20 L0 20 Z");
+}
+[dir="rtl"] .peer .bubble {
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 5px;
+}
+[dir="rtl"] .peer .bubble::before {
+  right: -6px;
+  left: auto;
+  clip-path: path("M0 20 L12 20 L12 0 Z");
+}
+
+/* Meta info (Sender Name) */
+.meta {
+  display: block;
+  font-weight: 600;
+  font-size: 0.8rem;
+  opacity: 0.9;
+  margin-bottom: 0.2rem;
+  color: var(--meta-text-color);
+}
+.row.self .bubble .meta {
+  display: none !important;
+}
+
+/* Timestamp styling */
+.timestamp {
+  position: absolute;
+  bottom: 0.4rem;
+  right: 0.9rem;
+  font-size: 0.75rem;
+  color: var(--meta-text-color);
+  opacity: 0.8;
+  user-select: none;
+}
+[dir="rtl"] .timestamp {
+  right: auto;
+  left: 0.9rem;
+}
+
+/* ---------- composer ---------- */
+form#compose {
+  display: flex;
+  align-items: center;
+  background: var(--card-bg);
+  padding: 0.6rem 1rem;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.08);
+  border-top: 1px solid var(--border-color);
+}
+form#compose input {
+  flex: 1;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 1rem;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  transition: border-color 0.15s ease-in-out,
+              box-shadow    0.15s ease-in-out;
+}
+form#compose input:focus {
+  border-color: var(--focus-ring-color);
+  outline: none;
+  box-shadow: 0 0 0 0.25rem rgba(13,110,253,0.25);
+}
+form#compose button {
+  margin-left: 0.6rem;
+  padding: 0.6rem 1.2rem;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  font-size: 1rem;
+  background: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+  flex-shrink: 0;
+}
+form#compose button:hover {
+  background: var(--button-hover-bg);
+}
+form#compose button:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.25rem rgba(13,110,253,0.5);
+}
+/* Send icon */
+form#compose button::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 0 8px 14px;
+  border-color: transparent transparent transparent var(--button-text);
+  margin-left: 2px;
+}
+[dir="rtl"] form#compose button {
+  margin-left: 0;
+  margin-right: 0.6rem;
+}
+[dir="rtl"] form#compose button::before {
+  transform: rotate(180deg);
+  margin-left: 0;
+  margin-right: -2px;
+}
+
+/* ---------- Responsiveness ---------- */
+@media (max-width: 600px) {
+  .bubble {
+    max-width: 85%;
+    padding: 0.4rem 0.8rem;
+    padding-bottom: 1.6rem;
+    font-size: 0.95rem;
+  }
+  form#compose {
+    padding: 0.5rem 0.75rem;
+  }
+  form#compose input {
+    padding: 0.5rem 0.7rem;
+  }
+  form#compose button {
+    width: 40px;
+    height: 40px;
+    padding: 0.5rem;
+  }
+  form#compose button::before {
+    border-width: 6px 0 6px 10px;
+  }
+  .timestamp {
+    bottom: 0.3rem;
+    right: 0.7rem;
+  }
+  [dir="rtl"] .timestamp {
+    right: auto;
+    left: 0.7rem;
+  }
+}
+.bubble.translated .orig-text,
+.bubble .orig-text {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.83rem;
+  line-height: 1.25;
+  opacity: 0.75;
+  color: var(--meta-text-color);
+  word-break: break-word;
+}
+/* ========================================================================
+   Bubble Integrity Fix
+   Ensures the rounded corner remains intact by placing the tail beneath.
+   ======================================================================== */
+.bubble {
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+  /* Reinforce full rounding */
+  border-radius: 18px !important;
+}
+.bubble::before {
+  /* Place tail behind bubble */
+  z-index: 0;
+}
+.self .bubble,
+.peer .bubble {
+  /* Restore both bottom corners to full rounding */
+  border-bottom-left-radius: 18px !important;
+  border-bottom-right-radius: 18px !important;
+}
